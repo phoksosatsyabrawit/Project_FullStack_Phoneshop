@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003_rename_models_column
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - renameColumn:
+            tableName: models
+            oldColumnName: id
+            newColumnName: model_id

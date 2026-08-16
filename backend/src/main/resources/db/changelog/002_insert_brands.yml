@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002_insert_brands
+      author: phoksosatsyabrawit@gmail.com
+      context: seed
+      runOnChange: false
+      changes:
+        - loadUpdateData:
+            tableName: brands
+            primaryKey: brand_id
+            columns:
+              - column:
+                  name: brand_id
+                  type: NUMERIC
+              - column:
+                  name: brand_name
+                  type: STRING
+            file: db/data/002_brands.csv
+  - changeSet:
+      id: 002_sync_brand_sequence
+      author: phoksosatsyabrawit@gmail.com
+      runAlways: true
+      dbms: postgresql
+      changes:
+        - sql:
+           sql: >
+            SELECT setval(
+              'brands_brand_id_seq',
+              COALESCE((SELECT MAX(brand_id) FROM brands), 1));
+           
+
+    
+

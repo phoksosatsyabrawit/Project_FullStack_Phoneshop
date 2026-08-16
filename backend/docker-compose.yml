@@ -1,0 +1,17 @@
+services:
+  db:
+    image: 'postgres:15.3'
+    environment:
+      - 'POSTGRES_USER=admin'
+      - 'POSTGRES_PASSWORD=brawitadmin95'
+      - 'POSTGRES_DB=phoneshop'
+    ports:
+      - '5433:5432'
+  web:
+    image: 'dpage/pgadmin4:6'
+    environment:
+        - 'PGADMIN_DEFAULT_EMAIL=superadmin@gmail.com'
+        - 'PGADMIN_DEFAULT_PASSWORD=superadmin123'
+        - 'PGADMIN_LISTEN_PORT=5050'
+    ports:
+      - '5050:5050'

@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007_add_column_email
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  type: VARCHAR (25)
+
+
+           
+
+    
+

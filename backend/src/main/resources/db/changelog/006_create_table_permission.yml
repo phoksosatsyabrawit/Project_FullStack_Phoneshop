@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006_create_table_permission
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - createTable:
+            tableName: permissions
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                  name: permission_id
+                  type: BIGINT
+              - column:
+                  name: permission_name
+                  type: VARCHAR(50)
+
+
+           
+
+    
+

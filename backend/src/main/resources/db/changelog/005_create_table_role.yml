@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005_create_table_role
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                  name: role_id
+                  type: BIGINT
+              - column:
+                  name: role_name
+                  type: VARCHAR(50)
+
+
+           
+
+    
+

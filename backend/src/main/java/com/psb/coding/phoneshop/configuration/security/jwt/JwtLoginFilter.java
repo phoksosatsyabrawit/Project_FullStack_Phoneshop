@@ -62,5 +62,6 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 			.expiration(java.sql.Date.valueOf(LocalDate.now()))
 			.compact();
 		response.setHeader("Authorization", "Bearer " + token);
+		response.setHeader("Access-Control-Expose-Headers", "Authorization");
 	}
 }

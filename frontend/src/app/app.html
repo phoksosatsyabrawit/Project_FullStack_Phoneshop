@@ -1,17 +1,23 @@
-<div class="wrapper">
-  <app-nav-sidebar></app-nav-sidebar>
+<div *ngIf="isLoggedIn; then thenBlock; else elseBlock"></div>
+<ng-template #thenBlock>
+  <div class="wrapper">
+    <app-nav-sidebar></app-nav-sidebar>
 
-  <div class="main">
-    <app-nav-bar></app-nav-bar>
+    <div class="main">
+      <app-nav-bar></app-nav-bar>
 
-    <main class="content">
-      <div class="container-fluid p-0">
+      <main class="content">
+        <div class="container-fluid p-0">
 
-        <router-outlet></router-outlet>
+          <router-outlet></router-outlet>
 
-      </div>
-    </main>
+        </div>
+      </main>
 
-    <app-footer></app-footer>
+      <app-footer></app-footer>
+    </div>
   </div>
-</div>
+</ng-template>
+<ng-template #elseBlock>
+  <app-login (isLoggedInEvent)="isLoggedInEmit($event)"></app-login>
+</ng-template>

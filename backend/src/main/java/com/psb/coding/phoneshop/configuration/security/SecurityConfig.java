@@ -1,5 +1,7 @@
 package com.psb.coding.phoneshop.configuration.security;
 
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,6 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.psb.coding.phoneshop.configuration.security.jwt.JwtLoginFilter;
 import com.psb.coding.phoneshop.configuration.security.jwt.TokenVerifyFilter;
@@ -34,12 +39,27 @@ public class SecurityConfig {
 	@Bean
 	public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager auth)
 			throws Exception {
-		http.csrf(csrf -> csrf.disable()).addFilter(new JwtLoginFilter(auth))
+		http.csrf(csrf -> csrf.disable())
+				.cors(cors -> cors.configurationSource(corsConfig()))
+				.addFilter(new JwtLoginFilter(auth))
 				.addFilterAfter(new TokenVerifyFilter(), JwtLoginFilter.class)
 				.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authz -> authz.requestMatchers("/login", "/welcome.html", "/css/**", "/js/**",
 						"/swagger-ui/**", "/v3/api-docs*/**", "/users/**", "/brands/**").permitAll().anyRequest().authenticated());
 		return http.build();
+	}
+	
+	@Bean
+	public CorsConfigurationSource corsConfig() {
+		CorsConfiguration cors = new CorsConfiguration();
+		cors.setAllowedOrigins(List.of("http://localhost:4200"));
+		cors.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTION"));
+		cors.setAllowedHeaders(List.of("*"));
+		cors.setAllowCredentials(true);
+		
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", cors);
+		return source;
 	}
 
 	/*@Bean

@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 		User user = userMapper.toUser(dto);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Role roles = roleRepository.findByRole(dto.getRoles().get(0))
-				.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, null));
+				.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Incorrect role."));
 		user.setRoles(Set.of(roles));
 		return userRepository.save(user);
 	}

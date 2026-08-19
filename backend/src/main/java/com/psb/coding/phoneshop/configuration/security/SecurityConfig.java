@@ -44,8 +44,8 @@ public class SecurityConfig {
 				.addFilter(new JwtLoginFilter(auth))
 				.addFilterAfter(new TokenVerifyFilter(), JwtLoginFilter.class)
 				.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authz -> authz.requestMatchers("/login", "/welcome.html", "/css/**", "/js/**",
-						"/swagger-ui/**", "/v3/api-docs*/**", "/users/**", "/brands/**").permitAll().anyRequest().authenticated());
+				.authorizeHttpRequests(authz -> authz.requestMatchers("/login", "/users/**", "/brands", "/welcome.html", "/css/**", "/js/**",
+						"/swagger-ui/**", "/v3/api-docs*/**").permitAll().anyRequest().authenticated());
 		return http.build();
 	}
 	

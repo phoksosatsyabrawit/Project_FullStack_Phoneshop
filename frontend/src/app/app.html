@@ -4,7 +4,7 @@
     <app-nav-sidebar></app-nav-sidebar>
 
     <div class="main">
-      <app-nav-bar></app-nav-bar>
+      <app-nav-bar (logoutEvent)="isLoggedOutEmit($event)"></app-nav-bar>
 
       <main class="content">
         <div class="container-fluid p-0">

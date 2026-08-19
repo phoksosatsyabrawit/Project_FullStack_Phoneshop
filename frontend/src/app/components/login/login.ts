@@ -1,5 +1,5 @@
 import { Component, inject, Output, EventEmitter } from '@angular/core';
-import { UserService } from '../../services/userservice/user-service';
+import { AuthService } from '../../services/authservice/auth-service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { HttpResponse } from '@angular/common/http';
@@ -11,7 +11,7 @@ import { HttpResponse } from '@angular/common/http';
   styleUrl: './login.css',
 })
 export class Login {
-  private service = inject(UserService);
+  private service = inject(AuthService);
   private fb = inject(FormBuilder);
 
   @Output() isLoggedInEvent = new EventEmitter<boolean>();
@@ -31,7 +31,7 @@ export class Login {
           this.isLoggedInEvent.emit(true);
         }
       },
-      error: (err: Error) => console.error(`Error: ${err}`)
+      error: (err) => { console.error(`Login faild. ${err}`) }
     });
   }
 }

@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common'
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common'
 import { NavSidebar } from './components/nav-sidebar/nav-sidebar';
@@ -15,12 +16,23 @@ import { Login } from './components/login/login';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   protected readonly title = signal('frontend');
+  private platformId = inject(PLATFORM_ID);
 
   isLoggedIn = false;
 
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.isLoggedIn = !!localStorage.getItem('token');
+    }
+  }
+
   isLoggedInEmit(loggedInEvent: boolean) {
     this.isLoggedIn = loggedInEvent;
+  }
+
+  isLoggedOutEmit(loggedoutEvent: boolean) {
+    this.isLoggedIn = loggedoutEvent;
   }
 }

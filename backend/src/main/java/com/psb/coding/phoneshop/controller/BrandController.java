@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +26,6 @@ import com.psb.coding.phoneshop.mapper.ModelMapper;
 import com.psb.coding.phoneshop.service.BrandService;
 import com.psb.coding.phoneshop.service.ModelService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,7 +39,7 @@ public class BrandController {
 	private final ModelService modelService;
 	private final ModelMapper modelMapper;
 	
-	//@PreAuthorize("hasAnyRole('ROLE_Admin')")
+	@PreAuthorize("hasAnyRole('ROLE_FINANCE')")
 	@PostMapping
 	public ResponseEntity<?> createBrand(@RequestBody BrandDTO brandDTO){
 		log.info("Create brand");
@@ -56,8 +54,8 @@ public class BrandController {
 		return ResponseEntity.ok(brand);
 	}
 	
-	@Operation(summary = "Get Brands")
-	//@PreAuthorize("hasAnyRole('ROLE_Admin', 'ROLE_Sale')")
+	//@Operation(summary = "Get Brands")
+	@PreAuthorize("hasAnyRole('ROLE_FINANCE', 'ROLE_SALE')")
 	@GetMapping
 	public ResponseEntity<?> getBrands(@RequestParam Map<String, String> params){
 		Page<Brand> page = brandService.getBrands(params);

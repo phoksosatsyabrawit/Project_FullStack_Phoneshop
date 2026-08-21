@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -62,6 +63,8 @@ public class TokenVerifyFilter extends OncePerRequestFilter {
 		}catch(JwtException e) {
 			log.info(e.getMessage());
 			errorResponse(response, HttpStatus.UNAUTHORIZED, "Token Invalid", e.getMessage());
+		}catch(AccessDeniedException e) {
+			errorResponse(response, HttpStatus.UNAUTHORIZED, "Unauthorized", e.getMessage());
 		}
 	}
 	
@@ -69,12 +72,12 @@ public class TokenVerifyFilter extends OncePerRequestFilter {
 		res.setStatus(status.value());
 		res.setContentType("application/json");
 		
-		Map<String, Object> payload = new LinkedHashMap<>();
-		payload.put("Code", code);
-		payload.put("Status", status.value());
-		payload.put("Message", message);
+		Map<String, Object> response = new LinkedHashMap<>();
+		response.put("Code", code);
+		response.put("Status", status.value());
+		response.put("Message", message);
 		
-		res.getWriter().write(mapper.writeValueAsString(payload));
+		res.getWriter().write(mapper.writeValueAsString(response));
 		res.getWriter().flush();
 	}
 }

@@ -40,6 +40,7 @@ public interface UserMapper {
     			.map(Role::getRole).collect(Collectors.toList());
     }
     
+    // Tell MapStruct how to convert Set<Permission> -> List<String>
     @Named("roleToPermission")
     default List<String> mapPermissions(Set<Role> roles){
     	if(roles == null) return Collections.emptyList();

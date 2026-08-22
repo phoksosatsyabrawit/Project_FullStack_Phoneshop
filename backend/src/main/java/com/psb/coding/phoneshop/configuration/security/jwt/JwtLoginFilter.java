@@ -59,8 +59,9 @@ public class JwtLoginFilter extends UsernamePasswordAuthenticationFilter {
 			//sign
 			.signWith(Keys.hmacShaKeyFor(key.getBytes()))
 			.issuer("psb.com")
-			.expiration(java.sql.Date.valueOf(LocalDate.now()))
+			.expiration(java.sql.Date.valueOf(LocalDate.now().plusDays(1)))
 			.compact();
 		response.setHeader("Authorization", "Bearer " + token);
+		response.setHeader("Access-Control-Expose-Headers", "Authorization");
 	}
 }

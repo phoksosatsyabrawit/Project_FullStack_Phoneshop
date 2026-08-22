@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-nav-bar',
@@ -6,4 +6,11 @@ import { Component } from '@angular/core';
   templateUrl: './nav-bar.html',
   styleUrl: './nav-bar.css',
 })
-export class NavBar {}
+export class NavBar {
+  @Output() logoutEvent = new EventEmitter();
+
+  logout() {
+    localStorage.removeItem('token');
+    this.logoutEvent.emit(false);
+  }
+}

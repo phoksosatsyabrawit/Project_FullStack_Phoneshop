@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 016_add_audit_columns_brands
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - addColumn:
+            tableName: brands
+            columns:
+              - column:
+                  name: create_date
+                  type: TIMESTAMP
+              - column:
+                  name: update_date
+                  type: TIMESTAMP
+              - column:
+                  name: user_create
+                  type: VARCHAR(25)
+              - column:
+                  name: user_update
+                  type: VARCHAR(25)
+
+
+           
+
+    
+

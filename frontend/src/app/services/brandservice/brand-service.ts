@@ -2,12 +2,11 @@ import { Service, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 @Service()
-export class UserService {
+export class BrandService {
     private http = inject(HttpClient);
+    url = 'http://localhost:8080';
 
-    url = "http://localhost:8080/users";
-
-    save(user: any) {
-        return this.http.post<any>(this.url, user);
+    save(brand: any) {
+        return this.http.post(`${this.url}/brands`, brand);
     }
 }

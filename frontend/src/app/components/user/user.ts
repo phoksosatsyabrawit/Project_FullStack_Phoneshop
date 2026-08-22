@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../services/userservice/user-service';
+import { AuthService } from '../../services/authservice/auth-service';
 
 @Component({
   selector: 'app-user',
@@ -11,7 +11,7 @@ import { UserService } from '../../services/userservice/user-service';
 })
 export class User implements OnInit {
   private fb = inject(FormBuilder);
-  private service = inject(UserService);
+  private service = inject(AuthService);
   isSubmited = false;
 
   roleNames = ["SALE", "FINANCE", "HR"];

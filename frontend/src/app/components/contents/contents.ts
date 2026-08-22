@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { BrandList } from '../brand/brand-list/brand-list';
+import { BrandList } from '../brands/brand-list/brand-list';
 
 @Component({
   selector: 'app-contents',

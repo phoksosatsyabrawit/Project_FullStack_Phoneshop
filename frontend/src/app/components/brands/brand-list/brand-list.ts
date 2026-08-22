@@ -55,6 +55,6 @@ export class BrandList implements OnInit {
   }
 
   redirectTo() {
-    this.router.navigate(['/brands']);
+    this.router.navigate(['/brand/form']);
   }
 }

@@ -16,7 +16,10 @@
                     <tr *ngFor="let brand of brandList()">
                         <td>{{brand.id}}</td>
                         <td class="d-none d-xl-table-cell">{{brand.name}}</td>
-                        <td class="d-none d-xl-table-cell"><a href="">Edit</a> | <a href="">Delete</a></td>
+                        <td class="d-none d-xl-table-cell">
+                            <button class="btn btn-primary btn-small me-3" (click)="edit(brand.id)">Edit</button>
+                            <button class="btn btn-danger btn-small">Delete</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>

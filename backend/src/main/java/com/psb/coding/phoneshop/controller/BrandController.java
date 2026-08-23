@@ -63,11 +63,11 @@ public class BrandController {
 		return ResponseEntity.ok(pageDTO);
 	}
 	
-	
+	@PreAuthorize("hasAnyRole('ROLE_FINANCE')")
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateBrand(@PathVariable Long id, @RequestBody BrandDTO brandDTO){
+	public ResponseEntity<?> updateBrand(@RequestBody BrandDTO brandDTO){
 		Brand brand = BrandMapper.INSTANCE.toBrand(brandDTO);
-		Brand update = brandService.update(id, brand);
+		Brand update = brandService.update(brand);
 		return ResponseEntity.ok(BrandMapper.INSTANCE.toBrandDTO(update));
 	}
 	

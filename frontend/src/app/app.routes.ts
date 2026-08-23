@@ -14,7 +14,8 @@ export const routes: Routes = [
         children: [
             { path: "", redirectTo: "list", pathMatch: "full" },
             { path: "list", component: BrandList },
-            { path: "form", component: BrandForm }
+            { path: "form", component: BrandForm },
+            { path: "form/:id", component: BrandForm }
         ]
     }
 ];

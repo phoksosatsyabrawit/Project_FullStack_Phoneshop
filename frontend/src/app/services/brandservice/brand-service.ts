@@ -18,4 +18,12 @@ export class BrandService {
     getBrands(param: HttpParams): Observable<any> {
         return this.http.get<any>(`${this.url}/brands`, { params: param });
     }
+
+    getById(brandId: any) {
+        return this.http.get<any>(`${this.url}/brands/${brandId}`);
+    }
+
+    update(brand: any) {
+        return this.http.put<any>(`${this.url}/brands/${brand.id}`, brand);
+    }
 }

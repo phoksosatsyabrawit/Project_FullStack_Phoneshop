@@ -10,7 +10,7 @@ public interface BrandService {
 	Brand create(Brand brand);
 	Brand getById(Long id);//return single brand
 	Brand update(Brand brandUpdate);
-	Brand delete(Long id, Brand brandDelete);
+	Brand delete(Long id);
 	//List<Brand> getBrands(String name);
 	//List<Brand> getBrands(Map<String, String> params); //dynamic query
 	Page<Brand> getBrands(Map<String, String> params);

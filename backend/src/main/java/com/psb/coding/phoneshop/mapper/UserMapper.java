@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
-import com.psb.coding.phoneshop.dto.UserV1DTO;
+import com.psb.coding.phoneshop.dto.UserCreateDTO;
 import com.psb.coding.phoneshop.entity.Permission;
 import com.psb.coding.phoneshop.entity.Role;
 import com.psb.coding.phoneshop.entity.User;
@@ -22,11 +22,11 @@ public interface UserMapper {
 	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 	
 	@Mapping(target = "roles", ignore = true) // roles resolved separately in the service, not from DTO
-    User toUser(UserV1DTO dto);
+    User toUser(UserCreateDTO dto);
 
     @Mapping(target = "roles", source = "roles", qualifiedByName = "roleToName")
     @Mapping(target = "permissions", source = "roles", qualifiedByName = "roleToPermission")
-    UserV1DTO toUserV1DTO(User entity);
+    UserCreateDTO toUserCreateDto(User entity);
     
     // Tell MapStruct how to convert a single Role -> String
     default String map(Role role) {

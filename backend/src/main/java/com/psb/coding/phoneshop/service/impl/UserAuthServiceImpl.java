@@ -1,4 +1,4 @@
-package com.psb.coding.phoneshop.configuration.security.jwt;
+package com.psb.coding.phoneshop.service.impl;
 
 import java.util.Collection;
 import java.util.Set;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserAuth implements UserDetails {
+public class UserAuthServiceImpl implements UserDetails {
 
 	private String username;
 	private String password;

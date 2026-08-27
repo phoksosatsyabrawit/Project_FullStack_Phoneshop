@@ -26,4 +26,8 @@ export class BrandService {
     update(brand: any) {
         return this.http.put<any>(`${this.url}/brands/${brand.id}`, brand);
     }
+
+    delete(brandId: number) {
+        return this.http.delete<any>(`${this.url}/brands/${brandId}`);
+    }
 }

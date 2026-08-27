@@ -47,9 +47,9 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public Brand delete(Long id, Brand brandDelete) {
+	public Brand delete(Long id) {
 		Brand brand = getById(id);
-		brandRepository.delete(brandDelete);
+		brandRepository.delete(brand);
 		return brand;
 	}
 

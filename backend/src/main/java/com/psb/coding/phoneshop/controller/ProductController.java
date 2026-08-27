@@ -32,15 +32,15 @@ public class ProductController {
 	private final ProductMapper productMapper;
 	
 	@PostMapping
-	public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO){
+	public ResponseEntity<?> create(@RequestBody ProductDTO productDTO){
 		Product product = productMapper.toProduct(productDTO);
 		product = productService.creat(product);
-		return ResponseEntity.ok(product);
+		return ResponseEntity.ok(productMapper.toProductDto(product));
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> getProducts(){
-		List<ProductDTO> products = productService.getProducts();
+	public ResponseEntity<?> getAll(){
+		List<ProductDTO> products = productService.getAll();
 		return ResponseEntity.ok(products);
 	}
 	
@@ -53,7 +53,7 @@ public class ProductController {
 	@PostMapping("{productId}/setSalePrice")
 	public ResponseEntity<?> setSalePrice(@PathVariable Long productId,@Valid @RequestBody PriceDTO priceDto){
 		Product setSalePrice = productService.setSalePrice(productId, priceDto);
-		return ResponseEntity.ok(setSalePrice);
+		return ResponseEntity.ok(productMapper.toProductDto(setSalePrice));
 	}
 	
 	@PostMapping("/uploads")

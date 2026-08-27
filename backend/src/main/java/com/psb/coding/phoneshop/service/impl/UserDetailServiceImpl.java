@@ -1,4 +1,4 @@
-package com.psb.coding.phoneshop.configuration.security.jwt;
+package com.psb.coding.phoneshop.service.impl;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
-public class LoadUserServiceImpl implements UserDetailsService {
+public class UserDetailServiceImpl implements UserDetailsService {
 
 	private final UserService userService;
 

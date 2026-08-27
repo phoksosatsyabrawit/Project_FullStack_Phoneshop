@@ -12,14 +12,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import com.psb.coding.phoneshop.configuration.security.jwt.JwtLoginFilter;
-import com.psb.coding.phoneshop.configuration.security.jwt.TokenVerifyFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,25 +24,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	private final PasswordEncoder passwordEncoder;
+	//private final PasswordEncoder passwordEncoder;
 	private final UserDetailsService userDetailsService;
 
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-		return config.getAuthenticationManager();
-	}
-
-	@Bean
-	public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager auth)
+	public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http)
 			throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.cors(cors -> cors.configurationSource(corsConfig()))
-				.addFilter(new JwtLoginFilter(auth))
-				.addFilterAfter(new TokenVerifyFilter(), JwtLoginFilter.class)
 				.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(authz -> authz.requestMatchers("/login", "/users/**", "/brands", "/welcome.html", "/css/**", "/js/**",
+				.authorizeHttpRequests(authz -> authz.requestMatchers("/auth/signin/**","/welcome.html", "/css/**", "/js/**",
 						"/swagger-ui/**", "/v3/api-docs*/**").permitAll().anyRequest().authenticated());
 		return http.build();
+	}
+	
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		return config.getAuthenticationManager();
 	}
 	
 	@Bean
@@ -77,7 +71,7 @@ public class SecurityConfig {
 
 	public DaoAuthenticationProvider getAuthenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-		provider.setPasswordEncoder(passwordEncoder);
+		//provider.setPasswordEncoder(passwordEncoder);
 		return provider;
 	}
 }

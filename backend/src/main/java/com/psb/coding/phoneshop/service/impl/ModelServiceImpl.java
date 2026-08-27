@@ -21,10 +21,10 @@ public class ModelServiceImpl implements ModelService { // inject through constr
 	/*private BrandService brandService;*/
 
 	@Override
-	public Model save(ModelDTO modelDTO) {
+	public Model create(ModelDTO dto) {
 		/*Integer brandId = model.getBrand().getId();
 		brandService.getById(brandId);*/
-		Model model = ModelMapper.INSTANCE.toModel(modelDTO);
+		Model model = ModelMapper.INSTANCE.toModel(dto);
 		return modelRepository.save(model);
 	}
 
@@ -40,9 +40,9 @@ public class ModelServiceImpl implements ModelService { // inject through constr
 	}
 
 	@Override
-	public Model update(Long id, ModelDTO modelUpdate) {
+	public Model update(Long id, ModelDTO dto) {
 		Model model = getById(id);
-		model.setName(modelUpdate.getName());
+		model.setName(dto.getName());
 		return modelRepository.save(model);
 	}
 
@@ -57,5 +57,4 @@ public class ModelServiceImpl implements ModelService { // inject through constr
 	public List<Model> getByBrand(Long id) {
 		return modelRepository.findByBrandId(id);
 	}
-	
 }

@@ -40,16 +40,16 @@ public class BrandServiceImpl implements BrandService {
 	}
 
 	@Override
-	public Brand update(Long id, Brand brandUpdate) {
-		Brand brand = getById(id);
+	public Brand update(Brand brandUpdate) {
+		Brand brand = getById(brandUpdate.getId());
 		brand.setName(brandUpdate.getName()); //@TODO improve update
 		return brandRepository.save(brand);
 	}
 
 	@Override
-	public Brand delete(Long id, Brand brandDelete) {
+	public Brand delete(Long id) {
 		Brand brand = getById(id);
-		brandRepository.delete(brandDelete);
+		brandRepository.delete(brand);
 		return brand;
 	}
 

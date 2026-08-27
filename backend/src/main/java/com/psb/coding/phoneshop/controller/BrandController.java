@@ -63,19 +63,19 @@ public class BrandController {
 		return ResponseEntity.ok(pageDTO);
 	}
 	
-	
+	@PreAuthorize("hasAnyRole('ROLE_FINANCE')")
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateBrand(@PathVariable Long id, @RequestBody BrandDTO brandDTO){
+	public ResponseEntity<?> updateBrand(@RequestBody BrandDTO brandDTO){
 		Brand brand = BrandMapper.INSTANCE.toBrand(brandDTO);
-		Brand update = brandService.update(id, brand);
+		Brand update = brandService.update(brand);
 		return ResponseEntity.ok(BrandMapper.INSTANCE.toBrandDTO(update));
 	}
 	
+	@PreAuthorize("hasAnyRole('ROLE_FINANCE')")
 	@DeleteMapping("{id}")
-	public ResponseEntity<?> deleteBrand(@PathVariable Long id, @RequestBody BrandDTO brandDTO){
-		Brand brand = BrandMapper.INSTANCE.toBrand(brandDTO);
-		Brand delete = brandService.delete(id, brand);
-		return ResponseEntity.ok(BrandMapper.INSTANCE.toBrandDTO(delete));
+	public ResponseEntity<?> deleteBrand(@PathVariable Long id){
+		Brand brand = brandService.delete(id);
+		return ResponseEntity.ok(BrandMapper.INSTANCE.toBrandDTO(brand));
 	}
 	
 	@GetMapping("{id}/models")

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -17,8 +18,9 @@ export class BrandList implements OnInit {
   brandList = signal<any[]>([]);
 
   constructor(
-    private brandService: BrandService,
-    private router: Router
+    private service: BrandService,
+    private router: Router,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -26,7 +28,7 @@ export class BrandList implements OnInit {
   }
 
   getBrand() {
-    this.brandService.getBrand().subscribe({
+    this.service.getBrand().subscribe({
       next: (res) => {
         this.brandList.set(res.page);
       },
@@ -37,7 +39,7 @@ export class BrandList implements OnInit {
   }
 
   private getBrandsList(param: HttpParams) {
-    this.brandService.getBrands(param).subscribe({
+    this.service.getBrands(param).subscribe({
       next: (res) => {
         this.brandList.set(res.page);
       },
@@ -55,6 +57,24 @@ export class BrandList implements OnInit {
   }
 
   redirectTo() {
-    this.router.navigate(['/brands']);
+    this.router.navigate(['/brand/form']);
+  }
+
+  edit(brandId: number) {
+    this.router.navigate(['/brand/form/', brandId]);
+  }
+
+  delete(brandId: number) {
+    this.service.delete(brandId).subscribe({
+      next: () => {
+        this.snackbar.open('Deleted successfully.', 'Close', { duration: 3500 });
+        this.brandList.update(currentBrand =>
+          currentBrand.filter(brand => brand.id !== brandId)
+        );
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 }

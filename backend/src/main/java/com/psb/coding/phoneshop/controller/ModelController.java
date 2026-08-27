@@ -28,9 +28,9 @@ public class ModelController { // inject dependency through constructor
 	private final ModelMapper modelMapper;
 	
 	@PostMapping
-	public ResponseEntity<?> createModel(@RequestBody ModelDTO modelDTO){
+	public ResponseEntity<?> create(@RequestBody ModelDTO modelDTO){
 		/*Model model = modelService.save(modelMapper.toModel(modelDTO));*/
-		Model model = modelService.save(modelDTO);
+		Model model = modelService.create(modelDTO);
 		return ResponseEntity.ok(modelMapper.toModelDTO(model));
 	}
 	
@@ -41,7 +41,7 @@ public class ModelController { // inject dependency through constructor
 	}
 	
 	@GetMapping
-	public ResponseEntity<?> getModels(){
+	public ResponseEntity<?> getAll(){
 		List<Model> models = modelService.getModels();
 		List<ModelDTO> listModels = models.stream()
 		.map(modelMapper::toModelDTO)
@@ -50,9 +50,9 @@ public class ModelController { // inject dependency through constructor
 	}
 	
 	@PutMapping("{id}")
-	public ResponseEntity<?> updateModel(@PathVariable Long id, @RequestBody ModelDTO dto){
-		Model update = modelService.update(id, dto);
-		return ResponseEntity.ok(modelMapper.toModelDTO(update));
+	public ResponseEntity<?> update(@PathVariable Long id, @RequestBody ModelDTO dto){
+		Model model = modelService.update(id, dto);
+		return ResponseEntity.ok(modelMapper.toModelDTO(model));
 	}
 	
 	@DeleteMapping("{id}")

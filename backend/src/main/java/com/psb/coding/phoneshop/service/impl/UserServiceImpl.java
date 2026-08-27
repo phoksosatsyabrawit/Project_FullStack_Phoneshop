@@ -8,8 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.psb.coding.phoneshop.configuration.security.jwt.UserAuth;
-import com.psb.coding.phoneshop.dto.UserV1DTO;
+import com.psb.coding.phoneshop.dto.UserCreateDTO;
 import com.psb.coding.phoneshop.entity.Role;
 import com.psb.coding.phoneshop.entity.User;
 import com.psb.coding.phoneshop.exception.ApiException;
@@ -32,10 +31,10 @@ public class UserServiceImpl implements UserService {
 	private final UserMapper userMapper;
 
 	@Override
-	public Optional<UserAuth> findUserByUsername(String username) {
+	public Optional<UserAuthServiceImpl> findUserByUsername(String username) {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User [%s] not found".formatted(username)));
-		UserAuth userAuth = UserAuth.builder()
+		UserAuthServiceImpl userAuth = UserAuthServiceImpl.builder()
 				.username(user.getUsername())
 				.password(user.getPassword())
 				.authorities(UserServiceImplHelper.getAuthority(user.getRoles()))
@@ -48,7 +47,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User createUser(UserV1DTO dto) {
+	public User createUser(UserCreateDTO dto) {
 		User user = userMapper.toUser(dto);
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		Role roles = roleRepository.findByRole(dto.getRoles().get(0))

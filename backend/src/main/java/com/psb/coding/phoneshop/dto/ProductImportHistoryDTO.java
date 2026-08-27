@@ -22,7 +22,7 @@ public class ProductImportHistoryDTO {
 	@DecimalMin(value = "0.001", message = "Costing must not be zero.")
 	private BigDecimal pricePerUnit;
 	
-	//@JsonFormat(pattern = "yyyy-MM-dd HH:mm[:ss]")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm[:ss]")
 	@NotNull(message = "Date Import Required")
 	private LocalDateTime importDate;
 }

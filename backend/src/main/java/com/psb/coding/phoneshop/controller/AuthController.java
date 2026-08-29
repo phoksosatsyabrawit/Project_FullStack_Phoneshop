@@ -23,7 +23,7 @@ public class AuthController {
 	public ResponseEntity<?> signIn(@RequestBody LoginRequestDto loginDto){
 		String jwt = authService.authenticateUser(loginDto);
 		HttpHeaders header = new HttpHeaders();
-		header.set("Authorization", "Bearer" + jwt);
+		header.set("Authorization", "Bearer " + jwt);
 		return ResponseEntity.ok().headers(header).build();
 	}
 }

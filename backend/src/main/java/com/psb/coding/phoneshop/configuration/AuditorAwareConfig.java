@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuditorAwareImplConfig implements AuditorAware<String>{
+public class AuditorAwareConfig implements AuditorAware<String>{
 
 	@Override
 	public Optional<String> getCurrentAuditor() {

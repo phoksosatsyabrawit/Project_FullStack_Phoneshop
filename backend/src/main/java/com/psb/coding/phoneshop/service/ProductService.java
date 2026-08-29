@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.psb.coding.phoneshop.dto.PriceDTO;
+import com.psb.coding.phoneshop.dto.SetPriceDTO;
 import com.psb.coding.phoneshop.dto.ProductDTO;
 import com.psb.coding.phoneshop.dto.ProductImportHistoryDTO;
 import com.psb.coding.phoneshop.entity.Product;
@@ -16,7 +16,7 @@ public interface ProductService {
 	Product getById(Long id);
 	List<ProductDTO> getAll();
 	void imports(ProductImportHistoryDTO productHistoryDto);
-	Product setSalePrice(Long id, PriceDTO priceDto);
+	Product setSalePrice(Long id, SetPriceDTO priceDto);
 	Map<Integer, String> upload(MultipartFile file);
 	Product getByModelIdAndColorId(Long modelId, Long colorId);
 }

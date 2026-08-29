@@ -13,25 +13,31 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.psb.coding.phoneshop.service.impl.helper.JwtHelper;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class TokenVerifyFilter extends OncePerRequestFilter {
 	
-	private static final String SECRET_KEY = "asdfghjkl;asdfghjkl;asdfghjkl;asdfghjkl;asdfghjkl;";
+	
+	private final JwtHelper jwtHelper;
+	
 	private ObjectMapper mapper = new ObjectMapper();
 
 	@Override
@@ -42,11 +48,11 @@ public class TokenVerifyFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
-		String token = header.replace("Bearer ", "");
+		String token = header.substring(7);
 		
 		try {
 			Claims payload = Jwts.parser()
-					.verifyWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes())) // set the signed key
+					.verifyWith(jwtHelper.getSignInKey()) // set the signed key
 					.build() 										// build actual parser
 					.parseSignedClaims(token)						// parse & verify
 					.getPayload();									// get claims

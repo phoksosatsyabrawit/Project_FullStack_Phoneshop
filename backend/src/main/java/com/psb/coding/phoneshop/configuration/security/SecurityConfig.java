@@ -4,18 +4,19 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.DefaultSecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.psb.coding.phoneshop.configuration.security.jwt.TokenVerifyFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,23 +25,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	//private final PasswordEncoder passwordEncoder;
+	private final PasswordConfig passwordConfig;
 	private final UserDetailsService userDetailsService;
+	private final TokenVerifyFilter tokenVerifyFilter;
 
 	@Bean
 	public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http)
 			throws Exception {
 		http.csrf(csrf -> csrf.disable())
 				.cors(cors -> cors.configurationSource(corsConfig()))
-				.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authz -> authz.requestMatchers("/auth/signin/**","/welcome.html", "/css/**", "/js/**",
-						"/swagger-ui/**", "/v3/api-docs*/**").permitAll().anyRequest().authenticated());
+						"/swagger-ui/**", "/v3/api-docs*/**").permitAll().anyRequest().authenticated())
+				.addFilterBefore(tokenVerifyFilter, UsernamePasswordAuthenticationFilter.class)
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		return http.build();
-	}
-	
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-		return config.getAuthenticationManager();
 	}
 	
 	@Bean
@@ -55,7 +53,17 @@ public class SecurityConfig {
 		source.registerCorsConfiguration("/**", cors);
 		return source;
 	}
+	
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.authenticationProvider(getAuthenticationProvider());
+	}
 
+	public DaoAuthenticationProvider getAuthenticationProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+		provider.setPasswordEncoder(passwordConfig.passwordEncoder());
+		return provider;
+	}
+	
 	/*@Bean
 	public InMemoryUserDetailsManager userDetailService() {
 		UserDetails user1 = User.builder().username("sam").password(passwordEncoder.encode("sam123"))
@@ -64,14 +72,4 @@ public class SecurityConfig {
 				.authorities(RoleConfig.SALE.getAuthorities()).build();
 		return new InMemoryUserDetailsManager(user1, user2);
 	}*/
-
-	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(getAuthenticationProvider());
-	}
-
-	public DaoAuthenticationProvider getAuthenticationProvider() {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-		//provider.setPasswordEncoder(passwordEncoder);
-		return provider;
-	}
 }

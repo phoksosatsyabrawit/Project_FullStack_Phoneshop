@@ -14,10 +14,6 @@ databaseChangeLog:
     - include:
           file: db/changelog/007_add_column_email.yml
     - include:
-          file: db/changelog/008_create_table_users.yml
-    - include:
-          file: db/changelog/009_add_column_email1.yml
-    - include:
           file: db/changelog/010_alter_column_password.yml
     - include:
           file: db/changelog/011_create_table_user_roles.yml
@@ -25,9 +21,5 @@ databaseChangeLog:
           file: db/changelog/012_create_roles_permissions_join_table.yml
     - include:
           file: db/changelog/013_create_table_user_roles2.yml
-    - include:
-          file: db/changelog/014_create_table_user_roles3.yml
-    - include:
-          file: db/changelog/015_create_table_user_roles4.yml
     - include:
           file: db/changelog/016_add_audit_columns_brands.yml

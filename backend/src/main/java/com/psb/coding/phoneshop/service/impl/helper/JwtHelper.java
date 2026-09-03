@@ -40,9 +40,11 @@ public class JwtHelper {
 				.collect(Collectors.toList());
 		return Jwts.builder()
 				.subject(authentication.getName())
-				.issuedAt(now).claim("Authorities", authorities)
+				.issuedAt(now)
+				.claim("Authorities", authorities)
 				.issuer("psbcode.com")
-				.expiration(new Date(now.getTime() + expiration)).signWith(getSignInKey())
+				.expiration(new Date(now.getTime() + expiration))
+				.signWith(getSignInKey())
 				.compact();
 	}
 
@@ -58,13 +60,14 @@ public class JwtHelper {
 	private boolean isTokenExpired(String token) {
 		return extractAllClaims(token)
 				.getExpiration()
-				.before(new Date(now.getTime() + expiration));
+				.before(new Date());
 	}
 
 	private Claims extractAllClaims(String token) {
 		return Jwts.parser()
 				.verifyWith(getSignInKey())
-				.build().parseSignedClaims(token)
+				.build()
+				.parseSignedClaims(token)
 				.getPayload();
 	}
 }

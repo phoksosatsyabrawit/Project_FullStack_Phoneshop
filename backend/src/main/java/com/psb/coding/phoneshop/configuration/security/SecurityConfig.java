@@ -31,13 +31,15 @@ public class SecurityConfig {
 			throws Exception {
 		http.csrf(csrf -> csrf.disable()) 	//.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				.cors(cors -> cors.configurationSource(corsConfig.corsConfiguration()))
-				.authorizeHttpRequests(authz -> authz.requestMatchers("/auth/signin", "/welcome.html", "/css/**", "/js/**",
-						"/swagger-ui/**", "/v3/api-docs*/**").permitAll().anyRequest().authenticated())
+				.authorizeHttpRequests(authz -> authz
+				.requestMatchers("/auth/signin", "/welcome.html", "/css/**", "/js/**",
+						"/swagger-ui/**", "/v3/api-docs*/**").permitAll()
+				.requestMatchers("/brands/**").authenticated()
+				.anyRequest().authenticated())
 				.addFilterBefore(cookieTokenFilter, UsernamePasswordAuthenticationFilter.class)
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		return http.build();
-	}
-	
+	}	
 	
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(getAuthenticationProvider());

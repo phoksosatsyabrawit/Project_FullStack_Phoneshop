@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 017_alter_table_user_column_enable
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - renameColumn:
+            tableName: users
+            oldColumnName: is_enalbed
+            newColumnName: is_enabled
+
+           
+
+    
+

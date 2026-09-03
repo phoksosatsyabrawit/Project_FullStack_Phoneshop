@@ -30,7 +30,7 @@ public class Role {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		    name = "roles_permissions",
-		    joinColumns = @JoinColumn(name = "role_role_id"),
+		    joinColumns = @JoinColumn(name = "roles_role_id"),
 		    inverseJoinColumns = @JoinColumn(name = "permissions_permission_id")
 		)
 	private Set<Permission> permissions;

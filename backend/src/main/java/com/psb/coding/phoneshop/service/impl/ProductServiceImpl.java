@@ -17,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.psb.coding.phoneshop.dto.PriceDTO;
+import com.psb.coding.phoneshop.dto.SetPriceDTO;
 import com.psb.coding.phoneshop.dto.ProductDTO;
 import com.psb.coding.phoneshop.dto.ProductImportHistoryDTO;
 import com.psb.coding.phoneshop.entity.Product;
@@ -74,7 +74,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public Product setSalePrice(Long id, PriceDTO priceDto) {
+	public Product setSalePrice(Long id, SetPriceDTO priceDto) {
 		Product product = getById(id);
 		
 		// validate price before set

@@ -1,7 +1,7 @@
-package com.psb.coding.phoneshop.configuration.security;
+package com.psb.coding.phoneshop.enumeration;
 
-import static com.psb.coding.phoneshop.configuration.security.PermissionConfig.BRAND_READ;
-import static com.psb.coding.phoneshop.configuration.security.PermissionConfig.BRAND_WRITE;
+import static com.psb.coding.phoneshop.enumeration.PermissionEnum.BRAND_READ;
+import static com.psb.coding.phoneshop.enumeration.PermissionEnum.BRAND_WRITE;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -20,7 +20,7 @@ public enum RoleEnum {
 	HR(Set.of(BRAND_READ, BRAND_WRITE));
 	
 	
-	private Set<PermissionConfig> permission;
+	private Set<PermissionEnum> permission;
 	
 	public Set<SimpleGrantedAuthority> getAuthorities(){
 		Set<SimpleGrantedAuthority> authorities = this.permission.stream()

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 018_drop_table_user_roles
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - dropTable:
+            tableName: user_roles
+            cascadeConstraints: true
+
+
+           
+
+    
+

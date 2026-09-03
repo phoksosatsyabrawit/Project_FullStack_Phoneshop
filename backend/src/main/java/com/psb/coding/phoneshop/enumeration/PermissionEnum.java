@@ -1,4 +1,4 @@
-package com.psb.coding.phoneshop.configuration.security;
+package com.psb.coding.phoneshop.enumeration;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum PermissionConfig {
+public enum PermissionEnum {
 
 	BRAND_READ("brand:read"), 
 	BRAND_WRITE("brand:write");

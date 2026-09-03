@@ -1,17 +1,51 @@
+version: "3.9"
+
 services:
-  db:
-    image: 'postgres:15.3'
+  postgres:
+    image: postgres:15.3
+    container_name: phoneshop-db
+    restart: unless-stopped
     environment:
-      - 'POSTGRES_USER=admin'
-      - 'POSTGRES_PASSWORD=brawitadmin95'
-      - 'POSTGRES_DB=phoneshop'
+      POSTGRES_DB: phoneshop
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: brawitadmin95
     ports:
-      - '5433:5432'
-  web:
+      - "5433:5432"
+    volumes:
+      - phoneshop_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U phoneshop"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+  pgadmin:
     image: 'dpage/pgadmin4:6'
     environment:
-        - 'PGADMIN_DEFAULT_EMAIL=superadmin@gmail.com'
-        - 'PGADMIN_DEFAULT_PASSWORD=superadmin123'
-        - 'PGADMIN_LISTEN_PORT=5050'
+      PGADMIN_DEFAULT_EMAIL: superadmin@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: superadmin123
+      PGADMIN_LISTEN_PORT: 5050
     ports:
-      - '5050:5050'
+     - "5050:5050"
+
+  app:
+    build: .
+    container_name: phoneshop-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # Spring's relaxed binding turns these env vars into
+      # spring.datasource.url / .username / .password automatically
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/phoneshop
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: brawitadmin95
+      # Example: if you read a JWT secret via @Value("${jwt.secret}")
+      JWT_SECRET: IKE4nWrwQ7KFsO0JsZ0AjIP4FkMsXZYXv9dc/r9rsPw=
+
+volumes:
+  phoneshop_pgdata:

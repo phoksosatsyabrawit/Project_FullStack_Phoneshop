@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.psb.coding.phoneshop.dto.PriceDTO;
+import com.psb.coding.phoneshop.dto.SetPriceDTO;
 import com.psb.coding.phoneshop.dto.ProductDTO;
 import com.psb.coding.phoneshop.dto.ProductImportHistoryDTO;
 import com.psb.coding.phoneshop.entity.Product;
@@ -51,7 +51,7 @@ public class ProductController {
 	}
 	
 	@PostMapping("{productId}/setSalePrice")
-	public ResponseEntity<?> setSalePrice(@PathVariable Long productId,@Valid @RequestBody PriceDTO priceDto){
+	public ResponseEntity<?> setSalePrice(@PathVariable Long productId,@Valid @RequestBody SetPriceDTO priceDto){
 		Product setSalePrice = productService.setSalePrice(productId, priceDto);
 		return ResponseEntity.ok(productMapper.toProductDto(setSalePrice));
 	}

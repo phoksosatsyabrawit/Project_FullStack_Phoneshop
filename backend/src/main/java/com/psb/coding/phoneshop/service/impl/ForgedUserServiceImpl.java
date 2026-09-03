@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.psb.coding.phoneshop.configuration.security.RoleEnum;
 import com.psb.coding.phoneshop.dto.UserCreateDTO;
 import com.psb.coding.phoneshop.entity.User;
+import com.psb.coding.phoneshop.enumeration.RoleEnum;
 import com.psb.coding.phoneshop.service.UserService;
 
 import lombok.RequiredArgsConstructor;

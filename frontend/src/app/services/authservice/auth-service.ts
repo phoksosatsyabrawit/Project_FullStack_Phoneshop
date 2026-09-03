@@ -13,6 +13,6 @@ export class AuthService {
     }
 
     login(loginData: any): Observable<any> {
-        return this.http.post(`${this.url}/login`, loginData, { observe: 'response' });
+        return this.http.post(`${this.url}/login`, loginData, { observe: 'response' }); //TODO withCredentials: true *access with cookie*
     }
 }

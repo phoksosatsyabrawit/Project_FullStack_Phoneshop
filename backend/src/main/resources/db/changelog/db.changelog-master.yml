@@ -23,3 +23,9 @@ databaseChangeLog:
           file: db/changelog/013_create_table_user_roles2.yml
     - include:
           file: db/changelog/016_add_audit_columns_brands.yml
+    - include:
+          file: db/changelog/017_alter_table_user_column_enable.yml
+    - include:
+          file: db/changelog/018_drop_table_user_roles.yml
+    - include:
+          file: db/changelog/019_alter_table_roles_permissions_column_role_role_id.yml

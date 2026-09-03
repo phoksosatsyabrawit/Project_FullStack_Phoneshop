@@ -8,18 +8,14 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.psb.coding.phoneshop.dto.LoginRequestDto;
-
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -31,30 +27,44 @@ public class JwtHelper {
 
 	@Value("${jwt.expiration-ms}")
 	private Long expiration;
-
-	private final AuthenticationManager authenticationManager;
-	private final HttpServletRequest req;
+	
+	private Date now = new Date();
 
 	public SecretKey getSignInKey() {
 		byte[] keyBtye = Base64.getDecoder().decode(secretKeyBase64);
 		return Keys.hmacShaKeyFor(keyBtye);
 	}
 
-	public String generateToken(LoginRequestDto loginDto) {
-		Date now = new Date();
-		Date expiry = new Date(now.getTime() + expiration);
-		ObjectMapper mapper = new ObjectMapper();
-		try {
-			LoginRequestDto loginMap = mapper.readValue(req.getInputStream(), loginDto.getClass());
-			Authentication authenticateUser = new UsernamePasswordAuthenticationToken(loginMap.getUsername(),
-					loginMap.getPassword());
-			Authentication authentication = authenticationManager.authenticate(authenticateUser);
-			List<String> authz = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-					.collect(Collectors.toList());
-			return Jwts.builder().subject(authentication.getName()).issuedAt(now).claim("Authorities", authz)
-					.issuer("psbcode.com").expiration(expiry).signWith(getSignInKey()).compact();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+	public String generateToken(Authentication authentication) {
+		List<String> authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
+		return Jwts.builder()
+				.subject(authentication.getName())
+				.issuedAt(now).claim("Authorities", authorities)
+				.issuer("psbcode.com")
+				.expiration(new Date(now.getTime() + expiration)).signWith(getSignInKey())
+				.compact();
+	}
+
+	public String extractUsername(String token) {
+		return extractAllClaims(token).getSubject();
+	}
+
+	public boolean isTokenValid(String token, UserDetails userDetails) {
+		String username = extractUsername(token);
+		return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+	}
+
+	private boolean isTokenExpired(String token) {
+		return extractAllClaims(token)
+				.getExpiration()
+				.before(new Date(now.getTime() + expiration));
+	}
+
+	private Claims extractAllClaims(String token) {
+		return Jwts.parser()
+				.verifyWith(getSignInKey())
+				.build().parseSignedClaims(token)
+				.getPayload();
 	}
 }

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 019_alter_table_roles_permissions_column_role_role_id
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - renameColumn:
+            tableName: roles_permissions
+            oldColumnName: role_role_id
+            newColumnName: roles_role_id
+
+           
+
+    
+

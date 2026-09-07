@@ -32,7 +32,7 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable()) 	//.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				.cors(cors -> cors.configurationSource(corsConfig.corsConfiguration()))
 				.authorizeHttpRequests(authz -> authz
-				.requestMatchers("/auth/signin", "/welcome.html", "/css/**", "/js/**",
+				.requestMatchers("/auth/signin", "/auth/refresh", "/welcome.html", "/css/**", "/js/**",
 						"/swagger-ui/**", "/v3/api-docs*/**").permitAll()
 				.requestMatchers("/brands/**").authenticated()
 				.anyRequest().authenticated())

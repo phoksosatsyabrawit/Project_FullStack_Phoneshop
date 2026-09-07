@@ -20,7 +20,6 @@ spring:
       date-time: yyyy-MM-dd HH:mm:ss
 jwt:
   secret: ${JWT_SECRET:IKE4nWrwQ7KFsO0JsZ0AjIP4FkMsXZYXv9dc/r9rsPw=}
-  expiration-ms: 3600000
 logging:
   level:
     liquibase: DEBUG

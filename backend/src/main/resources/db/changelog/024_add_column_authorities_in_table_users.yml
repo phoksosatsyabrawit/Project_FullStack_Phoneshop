@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 024_add_column_authorities_in_table_users
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: authorities
+                  type: TEXT[]
+
+
+           
+
+    
+

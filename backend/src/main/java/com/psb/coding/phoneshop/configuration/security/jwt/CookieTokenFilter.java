@@ -18,7 +18,6 @@ import com.psb.coding.phoneshop.service.impl.helper.JwtHelper;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -32,11 +31,16 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 	
 	private final JwtHelper jwtHelper;
 	private final UserDetailsService userDetailsService;
+	
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		return request.getServletPath().equals("/auth/refresh");
+	}
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
-		String token = getTokenFromCookie(request);
+		String token = jwtHelper.getAccessToken(request);
 		log.info("Token exists: {}", token != null);
 		try {
 			if(token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -52,25 +56,13 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 					}
 				}
 			}
+			filterChain.doFilter(request, response);
 		}catch(JwtException | IllegalArgumentException e) {
 			// Invalid or expired JWT.
 			// Do not authenticate the request
 			errorHandler(response, HttpStatus.UNAUTHORIZED, "Token Invalid", e.getMessage());
 			SecurityContextHolder.clearContext();
 		}
-		filterChain.doFilter(request, response);
-	}
-	
-	private String getTokenFromCookie(HttpServletRequest req) {
-		if(req.getCookies() == null) {
-			return null;
-		}
-		for(Cookie cookie: req.getCookies()) {
-			if("access_token".equals(cookie.getName())) {
-				return cookie.getValue();
-			}
-		}
-		return null;
 	}
 	
 	public void errorHandler(HttpServletResponse res, HttpStatus code, String status, String message) throws IOException {

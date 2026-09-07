@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 021_alter_column_token_hash_on_data_type
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - modifyDataType: 
+            tableName: refresh_tokens
+            columnName: token_hash
+            newDataType: VARCHAR(64)
+        - addUniqueConstraint:
+            tableName: refresh_tokens
+            columnNames: token_hash
+            constraintName: unique_token_hash
+
+
+           
+
+    
+

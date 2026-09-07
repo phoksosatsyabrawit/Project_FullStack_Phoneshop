@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 023_drop_column_authorities_in_table_users
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - dropColumn:
+            tableName: brands
+            columns:
+              - column:
+                  name: authorities
+                  type: TEXT[]
+
+
+           
+
+    
+

@@ -1,7 +1,12 @@
 package com.psb.coding.phoneshop.entity;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +23,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +47,10 @@ public class User {
 	private Boolean isAccountNonLocked;
 	private Boolean isCredentialsNonExpired;
 	private Boolean isEnabled;
+	private Set<SimpleGrantedAuthority> authorities;
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
 }

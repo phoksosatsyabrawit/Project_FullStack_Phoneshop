@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.psb.coding.phoneshop.dto.UserCreateDTO;
 import com.psb.coding.phoneshop.entity.User;
+import com.psb.coding.phoneshop.entity.UserAuth;
 import com.psb.coding.phoneshop.enumeration.RoleEnum;
 import com.psb.coding.phoneshop.service.UserService;
 
@@ -20,11 +21,11 @@ public class ForgedUserServiceImpl implements UserService {
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
-	public Optional<UserAuthServiceImpl> findUserByUsername(String username) {
-		List<UserAuthServiceImpl> userAuthServices = List.of(
-				new UserAuthServiceImpl("steve", passwordEncoder.encode("steve123"), RoleEnum.FINANCE.getAuthorities(),
+	public Optional<UserAuth> findUserByUsername(String username) {
+		List<UserAuth> userAuthServices = List.of(
+				new UserAuth("steve", passwordEncoder.encode("steve123"), RoleEnum.FINANCE.getAuthorities(),
 						true, true, true, true),
-				new UserAuthServiceImpl("votey", passwordEncoder.encode("votey123"), RoleEnum.SALE.getAuthorities(), 
+				new UserAuth("votey", passwordEncoder.encode("votey123"), RoleEnum.SALE.getAuthorities(), 
 						true, true, true, true));
 		return userAuthServices.stream().filter(u -> u.getUsername().equals(username)).findFirst();
 	}

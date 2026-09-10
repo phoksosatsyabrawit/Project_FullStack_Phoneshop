@@ -29,3 +29,13 @@ databaseChangeLog:
           file: db/changelog/018_drop_table_user_roles.yml
     - include:
           file: db/changelog/019_alter_table_roles_permissions_column_role_role_id.yml
+    - include:
+          file: db/changelog/020_create_table_refresh_token.yml
+    - include:
+          file: db/changelog/021_alter_column_token_hash_on_data_type.yml
+    - include:
+          file: db/changelog/022_add_column_authorities_in_table_users.yml
+    - include:
+          file: db/changelog/023_drop_column_authorities_in_table_users.yml
+    - include:
+          file: db/changelog/024_add_column_authorities_in_table_users.yml

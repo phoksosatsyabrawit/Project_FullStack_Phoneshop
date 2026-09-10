@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 020_create_table_refresh_token
+      author: phoksosatsyabrawit@gmail.com
+      changes:
+        - createTable:
+            tableName: refresh_tokens
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                  name: refresh_token_id
+                  type: BIGINT
+              - column:
+                  name: token_hash
+                  type: VARCHAR(255)
+                  constraints:
+                      nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+              - column: 
+                  name: is_revoked
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                      nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                      nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: refresh_tokens
+            baseColumnNames: user_id
+            constraintName: fk_refresh_token_user
+            referencedTableName: users
+            referencedColumnNames: user_id
+            onDelete: CASCADE
+           
+
+    
+

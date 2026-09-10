@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.psb.coding.phoneshop.dto.UserCreateDTO;
 import com.psb.coding.phoneshop.entity.Role;
 import com.psb.coding.phoneshop.entity.User;
+import com.psb.coding.phoneshop.entity.UserAuth;
 import com.psb.coding.phoneshop.exception.ApiException;
 import com.psb.coding.phoneshop.mapper.UserMapper;
 import com.psb.coding.phoneshop.repository.RoleRepository;
@@ -31,10 +32,10 @@ public class UserServiceImpl implements UserService {
 	private final UserMapper userMapper;
 
 	@Override
-	public Optional<UserAuthServiceImpl> findUserByUsername(String username) {
+	public Optional<UserAuth> findUserByUsername(String username) {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User [%s] not found".formatted(username)));
-		UserAuthServiceImpl userAuth = UserAuthServiceImpl.builder()
+		UserAuth userAuth = UserAuth.builder()
 				.username(user.getUsername())
 				.password(user.getPassword())
 				.authorities(UserServiceImplHelper.getAuthority(user.getRoles()))

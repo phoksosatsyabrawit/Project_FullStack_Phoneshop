@@ -39,7 +39,7 @@ public class BrandController {
 	private final ModelService modelService;
 	private final ModelMapper modelMapper;
 	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<?> createBrand(@RequestBody BrandDTO brandDTO){
 		log.info("Create brand");
@@ -55,7 +55,7 @@ public class BrandController {
 	}
 	
 	//@Operation(summary = "Get Brands")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_FINANCE', 'ROLE_SALE')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'FINANCE', 'SALE')")
 	@GetMapping
 	public ResponseEntity<?> getBrands(@RequestParam Map<String, String> params){
 		Page<Brand> page = brandService.getBrands(params);
@@ -63,7 +63,7 @@ public class BrandController {
 		return ResponseEntity.ok(pageDTO);
 	}
 	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("{id}")
 	public ResponseEntity<?> updateBrand(@RequestBody BrandDTO brandDTO){
 		Brand brand = BrandMapper.INSTANCE.toBrand(brandDTO);
@@ -71,7 +71,7 @@ public class BrandController {
 		return ResponseEntity.ok(BrandMapper.INSTANCE.toBrandDTO(update));
 	}
 	
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("{id}")
 	public ResponseEntity<?> deleteBrand(@PathVariable Long id){
 		Brand brand = brandService.delete(id);

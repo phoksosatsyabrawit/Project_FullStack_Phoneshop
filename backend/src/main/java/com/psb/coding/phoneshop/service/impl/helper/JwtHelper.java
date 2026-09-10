@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -24,26 +26,37 @@ public class JwtHelper {
 
 	@Value("${jwt.secret}")
 	private String secretKeyBase64;
-
-	@Value("${jwt.expiration-ms}")
-	private Long expiration;
+	private static final long EXPIRY = 5 * 60 * 1000;
 	
-	private Date now = new Date();
-
 	public SecretKey getSignInKey() {
 		byte[] keyBtye = Base64.getDecoder().decode(secretKeyBase64);
 		return Keys.hmacShaKeyFor(keyBtye);
 	}
 
-	public String generateToken(Authentication authentication) {
-		List<String> authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
+	public String generateAccessToken(Authentication authentication) {
+		Date now = new Date();
+		List<String> authorities = authentication.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 		return Jwts.builder()
 				.subject(authentication.getName())
-				.issuedAt(now).claim("Authorities", authorities)
+				.issuedAt(new Date())
+				.claim("Authorities", authorities)
 				.issuer("psbcode.com")
-				.expiration(new Date(now.getTime() + expiration)).signWith(getSignInKey())
+				.expiration(new Date(now.getTime() + EXPIRY)) //5 minute
+				.signWith(getSignInKey())
 				.compact();
+	}
+	
+	public String getAccessToken(HttpServletRequest req) {
+		if(req.getCookies() == null) {
+			return null;
+		}
+		for(Cookie cookie: req.getCookies()) {
+			if("access_token".equals(cookie.getName())) {
+				return cookie.getValue();
+			}
+		}
+		return null;
 	}
 
 	public String extractUsername(String token) {
@@ -58,13 +71,14 @@ public class JwtHelper {
 	private boolean isTokenExpired(String token) {
 		return extractAllClaims(token)
 				.getExpiration()
-				.before(new Date(now.getTime() + expiration));
+				.before(new Date());
 	}
 
 	private Claims extractAllClaims(String token) {
 		return Jwts.parser()
 				.verifyWith(getSignInKey())
-				.build().parseSignedClaims(token)
+				.build()
+				.parseSignedClaims(token)
 				.getPayload();
 	}
 }

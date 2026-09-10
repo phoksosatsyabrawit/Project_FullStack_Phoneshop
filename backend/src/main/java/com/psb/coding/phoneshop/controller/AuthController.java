@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.psb.coding.phoneshop.dto.LoginRequestDto;
-import com.psb.coding.phoneshop.dto.LoginResultDTO;
+import com.psb.coding.phoneshop.entity.LoginResult;
 import com.psb.coding.phoneshop.entity.RefreshToken;
 import com.psb.coding.phoneshop.entity.User;
 import com.psb.coding.phoneshop.service.AuthService;
@@ -40,7 +40,7 @@ public class AuthController {
 	
 	@PostMapping("/signin")
 	public ResponseEntity<?> signIn(@RequestBody LoginRequestDto loginDto, HttpServletResponse res){
-		LoginResultDTO loginResult = authService.login(loginDto);
+		LoginResult loginResult = authService.login(loginDto);
 		ResponseCookie accessToken = ResponseCookie
 				.from("access_token", loginResult.accessToken())
 				.httpOnly(true)

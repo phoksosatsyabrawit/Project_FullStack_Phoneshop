@@ -45,14 +45,14 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 		try {
 			if(token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 				String username = jwtHelper.extractUsername(token);
-				log.info("Username: {}", username);
+				//log.info("Username: {}", username);
 				if(username != null) {
 					UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 					if(jwtHelper.isTokenValid(token, userDetails)) {
 						UsernamePasswordAuthenticationToken authenticate = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 						authenticate.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 						SecurityContextHolder.getContext().setAuthentication(authenticate);
-						log.info("Authentication: {}", SecurityContextHolder.getContext().getAuthentication());
+						//log.info("Authentication: {}", SecurityContextHolder.getContext().getAuthentication());
 					}
 				}
 			}

@@ -61,7 +61,7 @@ public class AuthController {
 		
 		res.addHeader(HttpHeaders.SET_COOKIE, accessToken.toString());
 		res.addHeader(HttpHeaders.SET_COOKIE, refreshToken.toString());
-		return ResponseEntity.ok().body("Login success.");
+		return ResponseEntity.ok().build();
 	}
 	
 	@PostMapping("/refresh")
@@ -84,6 +84,6 @@ public class AuthController {
 					.maxAge(Duration.ofMinutes(5))
 					.build();
 			res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-		return ResponseEntity.ok().body("Get new access token.");
+		return ResponseEntity.ok().build();
 	}
 }

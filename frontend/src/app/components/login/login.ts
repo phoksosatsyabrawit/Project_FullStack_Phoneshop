@@ -2,7 +2,7 @@ import { Component, inject, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../../services/authservice/auth-service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -22,16 +22,17 @@ export class Login {
   });
 
   login() {
-    let loginData = this.loginForm.value;
-    this.service.login(loginData).subscribe({
+    let cred = this.loginForm.value;
+    this.service.login(cred).subscribe({
       next: (res: HttpResponse<any>) => {
-        if (res.status == 200) {
-          let token = res.headers.get('Authorization');
-          localStorage.setItem('token', token!);
+        if (res.status === 200) {
           this.isLoggedInEvent.emit(true);
         }
       },
-      error: (err) => { console.error(`Login faild. ${err}`) }
+      error: (err: HttpErrorResponse) => {
+        console.error(`Login faild. ${err}`)
+        console.error(err.status, err.message)
+      }
     });
   }
 }

@@ -9,10 +9,19 @@ export class AuthService {
     url = "http://localhost:8080";
 
     save(user: any) {
-        return this.http.post<any>(`${this.url}/users`, user);
+        return this.http.post<any>(`${this.url}/user`, user);
     }
 
-    login(loginData: any): Observable<any> {
-        return this.http.post(`${this.url}/login`, loginData, { observe: 'response' }); //TODO withCredentials: true *access with cookie*
+    login(cred: any): Observable<any> {
+        return this.http.post(`${this.url}/auth/signin`, cred,
+            {
+                observe: 'response',
+                withCredentials: true
+            }); //TODO withCredentials: true *access with cookie*
+    }
+
+    refreshSession() {
+        return this.http.post(`${this.url}/auth/refresh`, {},
+            { withCredentials: true });
     }
 }

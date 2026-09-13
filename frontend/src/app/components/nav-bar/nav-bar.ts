@@ -10,7 +10,6 @@ export class NavBar {
   @Output() logoutEvent = new EventEmitter();
 
   logout() {
-    localStorage.removeItem('token');
     this.logoutEvent.emit(false);
   }
 }

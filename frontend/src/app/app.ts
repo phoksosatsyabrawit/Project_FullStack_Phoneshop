@@ -21,23 +21,21 @@ export class App implements OnInit {
   protected readonly title = signal('frontend');
   private platformId = inject(PLATFORM_ID);
   private authService = inject(AuthService);
-  isLoggedIn = signal(false);
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.authService.refreshSession().subscribe({
-        next: () => { this.isLoggedIn.set(true) },
-        error: () => { this.isLoggedIn.set(false) }
+        next: () => { this.authService.isLoggedIn.set(true) },
+        error: () => { this.authService.isLoggedIn.set(false) }
       })
     }
   }
 
   isLoggedInEmit(loggedInEvent: boolean) {
-    this.isLoggedIn.set(loggedInEvent);
-    console.log(loggedInEvent)
+    this.authService.isLoggedIn.set(loggedInEvent);
   }
 
   isLoggedOutEmit(loggedoutEvent: boolean) {
-    this.isLoggedIn.set(loggedoutEvent);
+    this.authService.isLoggedIn.set(loggedoutEvent);
   }
 }

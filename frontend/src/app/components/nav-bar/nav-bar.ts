@@ -8,11 +8,9 @@ import { AuthService } from '../../services/authservice/auth-service'
   styleUrl: './nav-bar.css',
 })
 export class NavBar {
-  private authService = inject(AuthService);
   @Output() logoutEvent = new EventEmitter();
 
   logout() {
-    this.authService.isLoggedIn.set(true);
-    this.logoutEvent.emit(true);
+    this.logoutEvent.emit(false);
   }
 }

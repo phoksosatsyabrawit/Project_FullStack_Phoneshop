@@ -40,7 +40,7 @@ public class JwtHelper {
 		return Jwts.builder()
 				.subject(authentication.getName())
 				.issuedAt(new Date())
-				.claim("Authorities", authorities)
+				.claim("authorities", authorities)
 				.issuer("psbcode.com")
 				.expiration(new Date(now.getTime() + EXPIRY)) //5 minute
 				.signWith(getSignInKey())

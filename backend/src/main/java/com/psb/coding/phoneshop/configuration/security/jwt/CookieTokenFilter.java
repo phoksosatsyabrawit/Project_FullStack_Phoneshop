@@ -53,6 +53,8 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 						authenticate.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 						SecurityContextHolder.getContext().setAuthentication(authenticate);
 						//log.info("Authentication: {}", SecurityContextHolder.getContext().getAuthentication());
+					}else {
+						throw new JwtException("Token expired.");
 					}
 				}
 			}
@@ -62,12 +64,15 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 			// Do not authenticate the request
 			errorHandler(response, HttpStatus.UNAUTHORIZED, "Token Invalid", e.getMessage());
 			SecurityContextHolder.clearContext();
+			return;
 		}
 	}
 	
 	public void errorHandler(HttpServletResponse res, HttpStatus code, String status, String message) throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
+		res.setStatus(code.value());
+		res.setContentType("application/json");
 		
+		ObjectMapper mapper = new ObjectMapper();
 		Map<String, Object> response = new LinkedHashMap<>();
 		response.put("Code:", code.value());
 		response.put("Status", status);

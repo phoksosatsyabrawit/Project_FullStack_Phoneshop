@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.psb.coding.phoneshop.configuration.security.jwt.CookieTokenFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -36,6 +37,15 @@ public class SecurityConfig {
 						"/swagger-ui/**", "/v3/api-docs*/**").permitAll()
 				.requestMatchers("/brands/**").authenticated()
 				.anyRequest().authenticated())
+				.exceptionHandling(ex -> ex
+				.authenticationEntryPoint((req, res, authException) -> {
+					res.setContentType("application/json");
+					res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+					res.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");})
+				.authenticationEntryPoint((req, res, accessDenied) -> {
+					res.setContentType("application/json");
+					res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					res.getWriter().write("{\"error\": \"Forbidden\", \"message\": \"" + accessDenied.getMessage() + "\"}");}))
 				.addFilterBefore(cookieTokenFilter, UsernamePasswordAuthenticationFilter.class)
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 		return http.build();

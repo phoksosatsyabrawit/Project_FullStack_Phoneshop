@@ -1,11 +1,10 @@
-<div *ngIf="isLoggedIn(); then thenBlock; else elseBlock"></div>
+<div *ngIf="isLoggedInCall(); then thenBlock; else elseBlock"></div>
 <ng-template #thenBlock>
   <div class="wrapper">
     <app-nav-sidebar></app-nav-sidebar>
 
     <div class="main">
       <app-nav-bar (logoutEvent)="isLoggedOutEmit($event)"></app-nav-bar>
-
       <main class="content">
         <div class="container-fluid p-0">
 

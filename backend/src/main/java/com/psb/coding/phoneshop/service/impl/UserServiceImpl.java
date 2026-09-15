@@ -17,7 +17,6 @@ import com.psb.coding.phoneshop.mapper.UserMapper;
 import com.psb.coding.phoneshop.repository.RoleRepository;
 import com.psb.coding.phoneshop.repository.UserRepository;
 import com.psb.coding.phoneshop.service.UserService;
-import com.psb.coding.phoneshop.service.impl.helper.UserServiceImplHelper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,16 +34,7 @@ public class UserServiceImpl implements UserService {
 	public Optional<UserAuth> findUserByUsername(String username) {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User [%s] not found".formatted(username)));
-		UserAuth userAuth = UserAuth.builder()
-				.username(user.getUsername())
-				.password(user.getPassword())
-				.authorities(UserServiceImplHelper.getAuthority(user.getRoles()))
-				.isAccountNonExpired(true)
-				.isAccountNonLocked(true)
-				.isCredentialsNonExpired(true)
-				.isEnabled(true)
-				.build();
-		return Optional.of(userAuth);
+		return Optional.of(UserAuth.from(user));
 	}
 
 	@Override

@@ -24,9 +24,6 @@ export class App implements OnInit {
   isLoggedInCall = this.authService.isLoggedIn;
 
   ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isLoggedInCall.set(false);
-    }
   }
 
   isLoggedInEmit(loggedInEvent: boolean) {

@@ -41,13 +41,14 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String token = jwtHelper.getAccessToken(request);
-		log.info("Token exists: {}", token != null);
+		//log.info("Token exists: {}", token != null);
 		try {
 			if(token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 				String username = jwtHelper.extractUsername(token);
 				//log.info("Username: {}", username);
 				if(username != null) {
 					UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+					//log.info("Loaded Authorities: {}", userDetails.getAuthorities());
 					if(jwtHelper.isTokenValid(token, userDetails)) {
 						UsernamePasswordAuthenticationToken authenticate = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 						authenticate.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

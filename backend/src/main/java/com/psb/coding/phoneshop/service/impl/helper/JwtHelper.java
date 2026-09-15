@@ -8,10 +8,11 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.psb.coding.phoneshop.entity.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,9 +20,11 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtHelper {
 
 	@Value("${jwt.secret}")
@@ -33,12 +36,12 @@ public class JwtHelper {
 		return Keys.hmacShaKeyFor(keyBtye);
 	}
 
-	public String generateAccessToken(Authentication authentication) {
+	public String generateAccessToken(User user) {
 		Date now = new Date();
-		List<String> authorities = authentication.getAuthorities().stream()
+		List<String> authorities = UserServiceImplHelper.getAuthority(user.getRoles()).stream()
 				.map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 		return Jwts.builder()
-				.subject(authentication.getName())
+				.subject(user.getUsername())
 				.issuedAt(new Date())
 				.claim("authorities", authorities)
 				.issuer("psbcode.com")

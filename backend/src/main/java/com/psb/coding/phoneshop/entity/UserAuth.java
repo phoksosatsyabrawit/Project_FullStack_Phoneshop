@@ -8,6 +8,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.psb.coding.phoneshop.service.impl.helper.UserServiceImplHelper;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -25,6 +27,18 @@ public class UserAuth implements UserDetails {
 	private boolean isAccountNonLocked;
 	private boolean isCredentialsNonExpired;
 	private boolean isEnabled;
+	
+	public static UserAuth from(User user) {
+		return UserAuth.builder()
+				.username(user.getUsername())
+				.password(user.getPassword())
+				.authorities(UserServiceImplHelper.getAuthority(user.getRoles()))
+				.isAccountNonExpired(true)
+				.isAccountNonLocked(true)
+				.isCredentialsNonExpired(true)
+				.isEnabled(true)
+				.build();
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

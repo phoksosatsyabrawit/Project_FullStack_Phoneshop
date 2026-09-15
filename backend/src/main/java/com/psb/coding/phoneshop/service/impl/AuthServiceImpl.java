@@ -2,7 +2,6 @@ package com.psb.coding.phoneshop.service.impl;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.psb.coding.phoneshop.dto.LoginRequestDto;
@@ -26,10 +25,10 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Override
 	public LoginResult login(LoginRequestDto loginDto) {
-		Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
 		User user = userRepository.findByUsername(loginDto.getUsername()).orElseThrow();
-		String accessToken = jwtHelper.generateAccessToken(authentication);
-		String refresToken = refreshTokenService.create(user);
-		return new LoginResult(accessToken, refresToken);
+		String accessToken = jwtHelper.generateAccessToken(user);
+		String refreshToken = refreshTokenService.create(user);
+		return new LoginResult(accessToken, refreshToken);
 	}
 }

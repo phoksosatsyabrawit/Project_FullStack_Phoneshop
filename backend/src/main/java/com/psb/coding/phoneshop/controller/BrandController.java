@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,8 @@ public class BrandController {
 	private final ModelService modelService;
 	private final ModelMapper modelMapper;
 	
+	
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<?> createBrand(@RequestBody BrandDTO brandDTO){
@@ -60,6 +63,7 @@ public class BrandController {
 	public ResponseEntity<?> getBrands(@RequestParam Map<String, String> params){
 		Page<Brand> page = brandService.getBrands(params);
 		PageDTO pageDTO = new PageDTO(page);
+		//log.info("Current auth in controller: {}", SecurityContextHolder.getContext().getAuthentication());
 		return ResponseEntity.ok(pageDTO);
 	}
 	

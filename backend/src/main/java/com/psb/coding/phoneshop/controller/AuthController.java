@@ -5,10 +5,6 @@ import java.time.Duration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +30,6 @@ public class AuthController {
 	
 	private final AuthService authService;
 	private final RefreshTokenService refreshTokenService;
-	private final UserDetailsService userDetailsService;
 	private final RefreshTokenHelper refreshTokenHelper;
 	private final JwtHelper jwtHelper;
 	
@@ -72,9 +67,7 @@ public class AuthController {
 		}
 		RefreshToken token = refreshTokenService.validate(refreshToken);
 		User user = token.getUser();
-		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-		String newAccessToken = jwtHelper.generateAccessToken(authentication);
+		String newAccessToken = jwtHelper.generateAccessToken(user);
 		ResponseCookie cookie = ResponseCookie
 					.from("access_token", newAccessToken)
 					.httpOnly(true)

@@ -32,6 +32,8 @@ public class SecurityConfig {
 			throws Exception {
 		http.csrf(csrf -> csrf.disable()) 	//.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				.cors(cors -> cors.configurationSource(corsConfig.corsConfiguration()))
+				.addFilterBefore(cookieTokenFilter, UsernamePasswordAuthenticationFilter.class)
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authz -> authz
 				.requestMatchers("/auth/signin", "/auth/refresh", "/welcome.html", "/css/**", "/js/**",
 						"/swagger-ui/**", "/v3/api-docs*/**").permitAll()
@@ -42,12 +44,10 @@ public class SecurityConfig {
 					res.setContentType("application/json");
 					res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 					res.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");})
-				.authenticationEntryPoint((req, res, accessDenied) -> {
+				.accessDeniedHandler((req, res, accessDenied) -> {
 					res.setContentType("application/json");
 					res.setStatus(HttpServletResponse.SC_FORBIDDEN);
-					res.getWriter().write("{\"error\": \"Forbidden\", \"message\": \"" + accessDenied.getMessage() + "\"}");}))
-				.addFilterBefore(cookieTokenFilter, UsernamePasswordAuthenticationFilter.class)
-				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+					res.getWriter().write("{\"error\": \"Forbidden\", \"message\": \"" + accessDenied.getMessage() + "\"}");}));
 		return http.build();
 	}	
 	

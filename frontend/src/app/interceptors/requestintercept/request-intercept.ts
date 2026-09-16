@@ -16,7 +16,7 @@ export const requestIntercept: HttpInterceptorFn = (req, next) => {
             if (error.status === 401 && !req.url.includes('/auth/refresh') && !req.url.includes('/auth/signin')) {
                 if (!isRefresh) {
                     isRefresh = true; // prevent other 401 attempt to start their own refresh call
-                    refreshTokenSubject.next(null);
+                    refreshTokenSubject.next(null); // reset to "not ready yet" state
 
                     return authService.refreshSession().pipe(
                         switchMap(() => {
@@ -25,11 +25,11 @@ export const requestIntercept: HttpInterceptorFn = (req, next) => {
                             return next(authReq); // retry original request
                         }),
                         // in the failure branch
-                        catchError((refreshError) => {
+                        catchError((refreshInvalid) => {
                             isRefresh = false;
                             refreshTokenSubject.next(false); // <-- tell waiter it failed, not just silence
                             authService.isLoggedIn.set(false);
-                            return throwError(() => refreshError);
+                            return throwError(() => refreshInvalid);
                         })
                     );
                     // handle waiting branch failure

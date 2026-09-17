@@ -1,7 +1,7 @@
 package com.psb.coding.phoneshop.dto;
 
 
-import java.util.List;
+import java.util.Set;
 
 import lombok.Data;
 
@@ -10,6 +10,5 @@ public class UserCreateDTO {
 	private String username;
 	private String email;
 	private String password;
-	private List<String> roles;
-	private List<String> permissions;
+	private Set<String> roles;
 }

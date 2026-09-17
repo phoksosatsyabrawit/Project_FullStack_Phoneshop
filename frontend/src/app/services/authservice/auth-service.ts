@@ -10,7 +10,7 @@ export class AuthService {
     url = "http://localhost:8080";
 
     save(user: any) {
-        return this.http.post<any>(`${this.url}/user`, user);
+        return this.http.post<any>(`${this.url}/users`, user);
     }
 
     login(cred: any): Observable<any> {

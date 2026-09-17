@@ -2,6 +2,7 @@ package com.psb.coding.phoneshop.service.impl;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,9 @@ import com.psb.coding.phoneshop.repository.UserRepository;
 import com.psb.coding.phoneshop.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Primary
 @Service
 @RequiredArgsConstructor
@@ -41,9 +44,10 @@ public class UserServiceImpl implements UserService {
 	public User createUser(UserCreateDTO dto) {
 		User user = userMapper.toUser(dto);
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
-		Role roles = roleRepository.findByRole(dto.getRoles().get(0))
-				.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Incorrect role."));
-		user.setRoles(Set.of(roles));
+		Set<Role> roles = dto.getRoles().stream()
+				.map(roleName -> roleRepository.findByRole(roleName).orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Incorrect role" + roleName)))
+				.collect(Collectors.toSet());
+		user.setRoles(roles);
 		return userRepository.save(user);
 	}
 }

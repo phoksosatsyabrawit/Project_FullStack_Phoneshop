@@ -21,11 +21,11 @@ public interface UserMapper {
 
 	UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 	
-	@Mapping(target = "roles", ignore = true) // roles resolved separately in the service, not from DTO
+	@Mapping(target = "roles", ignore = true) 
     User toUser(UserCreateDTO dto);
 
     @Mapping(target = "roles", source = "roles", qualifiedByName = "roleToName")
-    @Mapping(target = "permissions", source = "roles", qualifiedByName = "roleToPermission")
+    //@Mapping(target = "permissions", source = "roles", qualifiedByName = "roleToPermission")
     UserCreateDTO toUserCreateDto(User entity);
     
     // Tell MapStruct how to convert a single Role -> String
@@ -35,9 +35,10 @@ public interface UserMapper {
     
     // Tell MapStruct how to convert Set<Role> -> List<String>
     @Named("roleToName")
-    default List<String> mapRoles(Set<Role> roles){
+    default Set<String> mapRoles(Set<Role> roles){
+    	if(roles == null) return Collections.emptySet();
     	return roles.stream()
-    			.map(Role::getRole).collect(Collectors.toList());
+    			.map(Role::getRole).collect(Collectors.toSet());
     }
     
     // Tell MapStruct how to convert Set<Permission> -> List<String>

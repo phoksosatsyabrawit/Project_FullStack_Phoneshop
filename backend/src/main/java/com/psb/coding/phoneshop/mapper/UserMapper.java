@@ -24,8 +24,8 @@ public interface UserMapper {
 	@Mapping(target = "roles", ignore = true) 
     User toUser(UserCreateDTO dto);
 
+	//@Mapping(target = "permissions", source = "roles", qualifiedByName = "roleToPermission")
     @Mapping(target = "roles", source = "roles", qualifiedByName = "roleToName")
-    //@Mapping(target = "permissions", source = "roles", qualifiedByName = "roleToPermission")
     UserCreateDTO toUserCreateDto(User entity);
     
     // Tell MapStruct how to convert a single Role -> String

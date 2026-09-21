@@ -9,5 +9,5 @@ import com.psb.coding.phoneshop.entity.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-	Optional<Role> findByRole(String roles);
+	Optional<Role> findByRole(String role);
 }

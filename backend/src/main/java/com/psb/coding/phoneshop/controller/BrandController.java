@@ -39,6 +39,8 @@ public class BrandController {
 	private final ModelService modelService;
 	private final ModelMapper modelMapper;
 	
+	
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<?> createBrand(@RequestBody BrandDTO brandDTO){
@@ -60,6 +62,7 @@ public class BrandController {
 	public ResponseEntity<?> getBrands(@RequestParam Map<String, String> params){
 		Page<Brand> page = brandService.getBrands(params);
 		PageDTO pageDTO = new PageDTO(page);
+		//log.info("Current auth in controller: {}", SecurityContextHolder.getContext().getAuthentication());
 		return ResponseEntity.ok(pageDTO);
 	}
 	

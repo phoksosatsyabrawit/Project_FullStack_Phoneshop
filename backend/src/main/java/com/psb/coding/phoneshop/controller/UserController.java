@@ -1,6 +1,7 @@
 package com.psb.coding.phoneshop.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class UserController {
 	private final UserService userService;
 	private final UserMapper userMapper;
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping
 	public ResponseEntity<?> createUser(@RequestBody UserCreateDTO dto){
 		User user = userService.createUser(dto);

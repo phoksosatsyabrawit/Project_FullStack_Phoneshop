@@ -2,6 +2,7 @@ package com.psb.coding.phoneshop.service.impl;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
@@ -17,10 +18,11 @@ import com.psb.coding.phoneshop.mapper.UserMapper;
 import com.psb.coding.phoneshop.repository.RoleRepository;
 import com.psb.coding.phoneshop.repository.UserRepository;
 import com.psb.coding.phoneshop.service.UserService;
-import com.psb.coding.phoneshop.service.impl.helper.UserServiceImplHelper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Primary
 @Service
 @RequiredArgsConstructor
@@ -35,25 +37,17 @@ public class UserServiceImpl implements UserService {
 	public Optional<UserAuth> findUserByUsername(String username) {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User [%s] not found".formatted(username)));
-		UserAuth userAuth = UserAuth.builder()
-				.username(user.getUsername())
-				.password(user.getPassword())
-				.authorities(UserServiceImplHelper.getAuthority(user.getRoles()))
-				.isAccountNonExpired(true)
-				.isAccountNonLocked(true)
-				.isCredentialsNonExpired(true)
-				.isEnabled(true)
-				.build();
-		return Optional.of(userAuth);
+		return Optional.of(UserAuth.from(user));
 	}
 
 	@Override
 	public User createUser(UserCreateDTO dto) {
 		User user = userMapper.toUser(dto);
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
-		Role roles = roleRepository.findByRole(dto.getRoles().get(0))
-				.orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Incorrect role."));
-		user.setRoles(Set.of(roles));
+		Set<Role> roles = dto.getRoles().stream()
+				.map(roleName -> roleRepository.findByRole(roleName).orElseThrow(() -> new ApiException(HttpStatus.BAD_REQUEST, "Incorrect role" + roleName)))
+				.collect(Collectors.toSet());
+		user.setRoles(roles);
 		return userRepository.save(user);
 	}
 }

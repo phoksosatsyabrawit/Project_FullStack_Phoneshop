@@ -1,0 +1,84 @@
+# ==========================================
+# 1. JAVA & SPRING BOOT (Maven)
+# ==========================================
+# Compiled Java class files
+*.class
+
+# Log files
+*.log
+
+# Blueprint and temporary files
+*.md.html
+*.attach_pid*
+
+# Maven build outputs
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.next
+pom.xml.war
+pom.xml.gpg
+release.properties
+dependency-reduced-pom.xml
+
+# Spring Boot execution local configurations (secrets)
+.evn
+*.properties.local
+*.yml.local
+
+# ==========================================
+# 2. ANGULAR & TYPESCRIPT (Frontend)
+# ==========================================
+# Dependencies
+node_modules/
+
+# Local Angular cache
+.angular/
+
+# compiled web outputs
+/dist
+/tmp
+/out-tsc
+/bazel-out
+
+# Log files for npm / yarn
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Unit/E2E testing output
+/coverage
+/e2e/*.js
+/e2e/*.map
+
+# ==========================================
+# 3. VISUAL STUDIO CODE (IDE)
+# ==========================================
+# Exclude general VS Code settings, but keep configurations for launch/tasks if shared
+.vscode/*
+!.vscode/setting.json
+!.vscode/task.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+# Other IDE structures (in cases of team crossovers)
+.idea/
+*.iml
+*.ipr
+*.iws
+*classpath
+.project
+.settings/
+.factorypath
+
+# ==========================================
+# 4. OPERATING SYSTEM
+# ==========================================
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+
+

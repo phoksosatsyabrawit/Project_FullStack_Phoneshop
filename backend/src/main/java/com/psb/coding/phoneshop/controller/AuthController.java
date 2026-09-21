@@ -5,10 +5,6 @@ import java.time.Duration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +30,6 @@ public class AuthController {
 	
 	private final AuthService authService;
 	private final RefreshTokenService refreshTokenService;
-	private final UserDetailsService userDetailsService;
 	private final RefreshTokenHelper refreshTokenHelper;
 	private final JwtHelper jwtHelper;
 	
@@ -66,16 +61,15 @@ public class AuthController {
 	
 	@PostMapping("/refresh")
 	public ResponseEntity<?> refresh(HttpServletRequest req, HttpServletResponse res){
-		String refreshToken = refreshTokenHelper.getRefreshToken(req);
-		if(refreshToken == null) {
+		String refreshTokenVal = refreshTokenHelper.getRefreshToken(req);
+		if(refreshTokenVal == null) {
 			return ResponseEntity.status(401).build();
 		}
-		RefreshToken token = refreshTokenService.validate(refreshToken);
+		RefreshToken token = refreshTokenService.validate(refreshTokenVal);
 		User user = token.getUser();
-		UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
-		Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-		String newAccessToken = jwtHelper.generateAccessToken(authentication);
-		ResponseCookie cookie = ResponseCookie
+		String newAccessToken = jwtHelper.generateAccessToken(user);
+		String newRefreshToken = refreshTokenService.rotate(token);
+		ResponseCookie accessToken = ResponseCookie
 					.from("access_token", newAccessToken)
 					.httpOnly(true)
 					.secure(false)
@@ -83,7 +77,16 @@ public class AuthController {
 					.sameSite("Strict")
 					.maxAge(Duration.ofMinutes(5))
 					.build();
-			res.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+		ResponseCookie refreshToken = ResponseCookie
+				.from("refresh_token", newRefreshToken)
+				.httpOnly(true)
+				.secure(false)
+				.path("/")
+				.sameSite("Lax")
+				.maxAge(Duration.ofDays(7))
+				.build();
+			res.addHeader(HttpHeaders.SET_COOKIE, accessToken.toString());
+			res.addHeader(HttpHeaders.SET_COOKIE, refreshToken.toString());
 		return ResponseEntity.ok().build();
 	}
 }

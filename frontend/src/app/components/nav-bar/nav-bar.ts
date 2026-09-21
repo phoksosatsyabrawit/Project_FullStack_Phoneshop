@@ -1,4 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, inject } from '@angular/core';
+import { AuthService } from '../../services/authservice/auth-service'
 
 @Component({
   selector: 'app-nav-bar',

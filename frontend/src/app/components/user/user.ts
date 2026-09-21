@@ -2,6 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/authservice/auth-service';
+import { MatSnackBar } from '@angular/material/snack-bar'
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-user',
@@ -12,6 +14,7 @@ import { AuthService } from '../../services/authservice/auth-service';
 export class User implements OnInit {
   private fb = inject(FormBuilder);
   private service = inject(AuthService);
+  private snackBar = inject(MatSnackBar);
   isSubmited = false;
 
   roleNames = ["SALE", "FINANCE", "HR"];
@@ -50,8 +53,17 @@ export class User implements OnInit {
     this.isSubmited = true;
     const user = this.userData();
     this.service.save(user).subscribe({
-      next: (res) => { res.status(200).send(res) },
-      error: (err: Error) => { console.error(err) }
+      next: () => {
+        this.snackBar.open('User created successful.', 'close', {
+          duration: 3000
+        })
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error(err),
+          this.snackBar.open(`Faild: ${err.status}, ${err.message}`, 'close', {
+            duration: 3000
+          })
+      }
     });
   }
 }

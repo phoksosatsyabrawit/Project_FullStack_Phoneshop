@@ -29,23 +29,15 @@ export class BrandList implements OnInit {
 
   getBrand() {
     this.service.getBrand().subscribe({
-      next: (res) => {
-        this.brandList.set(res.page);
-      },
-      error: (err) => {
-        console.error(err);
-      }
+      next: (res) => { this.brandList.set(res.page); },
+      error: (err) => { console.error(err); }
     });
   }
 
   private getBrandsList(param: HttpParams) {
     this.service.getBrands(param).subscribe({
-      next: (res) => {
-        this.brandList.set(res.page);
-      },
-      error: (err) => {
-        console.error(err);
-      }
+      next: (res) => { this.brandList.set(res.page); },
+      error: (err) => { console.error(err); }
     });
   }
 

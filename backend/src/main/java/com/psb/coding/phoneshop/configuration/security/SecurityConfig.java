@@ -13,6 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.psb.coding.phoneshop.configuration.security.jwt.CookieTokenFilter;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -31,13 +32,22 @@ public class SecurityConfig {
 			throws Exception {
 		http.csrf(csrf -> csrf.disable()) 	//.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
 				.cors(cors -> cors.configurationSource(corsConfig.corsConfiguration()))
+				.addFilterBefore(cookieTokenFilter, UsernamePasswordAuthenticationFilter.class)
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authz -> authz
 				.requestMatchers("/auth/signin", "/auth/refresh", "/welcome.html", "/css/**", "/js/**",
 						"/swagger-ui/**", "/v3/api-docs*/**").permitAll()
 				.requestMatchers("/brands/**").authenticated()
 				.anyRequest().authenticated())
-				.addFilterBefore(cookieTokenFilter, UsernamePasswordAuthenticationFilter.class)
-				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+				.exceptionHandling(ex -> ex
+				.authenticationEntryPoint((req, res, authException) -> {
+					res.setContentType("application/json");
+					res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+					res.getWriter().write("{\"error\": \"Unauthorized\", \"message\": \"" + authException.getMessage() + "\"}");})
+				.accessDeniedHandler((req, res, accessDenied) -> {
+					res.setContentType("application/json");
+					res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+					res.getWriter().write("{\"error\": \"Forbidden\", \"message\": \"" + accessDenied.getMessage() + "\"}");}));
 		return http.build();
 	}	
 	

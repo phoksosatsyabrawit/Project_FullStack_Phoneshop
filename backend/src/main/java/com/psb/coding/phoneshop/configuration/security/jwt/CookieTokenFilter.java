@@ -34,7 +34,7 @@ public class CookieTokenFilter extends OncePerRequestFilter {
 	
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-		return request.getServletPath().equals("/auth/refresh");
+		return request.getServletPath().equals("/auth/refreshs");
 	}
 
 	@Override

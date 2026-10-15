@@ -1,0 +1,65 @@
+services:
+  postgres:
+    image: postgres:15.3
+    container_name: phoneshop-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      # ":?" makes compose stop with a clear message if the value is missing,
+      # instead of silently starting with an empty password.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      # 127.0.0.1 = reachable only from YOUR computer (for DB tools), not the network.
+      - "localhost:5433:5432"
+    volumes:
+      - phoneshop_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:6
+    container_name: phoneshop-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:?Set PGADMIN_PASSWORD in .env}
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - "localhost:5050:5050"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin   # keeps your saved server connections
+
+  app:
+    build: ./backend
+    container_name: phoneshop-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy      # wait until the DB is truly ready
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+    ports:
+      # Only for testing with Postman/Swagger. The frontend does NOT need this:
+      # it reaches the backend through nginx over the internal network.
+      - "localhost:8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: phoneshop-frontend
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:8080"                       # browser: http://localhost
+
+volumes:
+  phoneshop_pgdata:
+  pgadmin_data:

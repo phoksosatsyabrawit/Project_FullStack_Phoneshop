@@ -26,6 +26,10 @@ dependency-reduced-pom.xml
 *.properties.local
 *.yml.local
 
+# Environment
+.env
+.env.*
+
 # ==========================================
 # 2. ANGULAR & TYPESCRIPT (Frontend)
 # ==========================================

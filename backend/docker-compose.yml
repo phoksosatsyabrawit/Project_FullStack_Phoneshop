@@ -36,7 +36,7 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "8080:8080"
+      - ""
     environment:
       SPRING_PROFILES_ACTIVE: prod
       # Spring's relaxed binding turns these env vars into

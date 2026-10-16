@@ -8,6 +8,7 @@ RUN npm ci
 
 COPY . .
 RUN npm run build -- --configuration production
+RUN cd dist/*/browser && [-f index.html] || cp index.csr.html index.html
 
 # ---- Stage 2: serve the files with nginx (already non-root, port 8080) ----
 FROM nginxinc/nginx-unprivileged:1.27-alpine

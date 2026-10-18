@@ -58,7 +58,7 @@ services:
     depends_on:
       - app
     ports:
-      - "127.0.0.1:4200:8080"                       # browser: http://localhost
+      - "127.0.0.1:4200:8080"                       # browser: http://localhost:4200
 
 volumes:
   phoneshop_pgdata:

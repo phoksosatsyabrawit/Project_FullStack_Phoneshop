@@ -13,7 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class User implements OnInit {
   private fb = inject(FormBuilder);
-  private service = inject(AuthService);
+  private authService = inject(AuthService);
   private snackBar = inject(MatSnackBar);
   isSubmited = false;
 
@@ -52,7 +52,7 @@ export class User implements OnInit {
   submit() {
     this.isSubmited = true;
     const user = this.userData();
-    this.service.save(user).subscribe({
+    this.authService.save(user).subscribe({
       next: () => {
         this.snackBar.open('User created successful.', 'close', {
           duration: 3000
